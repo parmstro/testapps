@@ -1,7 +1,13 @@
 ---
+# If you are digging in the code :-)
+# Note that we could replace the nginx
+# service and package name with whatever
+# version of the SCL nginx we wanted using
+# a variable.
+
 - name: Restarting nginx on notification
   service:
-    name: nginx
+    name: rh-nginx112-nginx
     state: restarted
     enabled: yes
 
