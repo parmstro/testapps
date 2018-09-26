@@ -1,18 +1,29 @@
 ---
-- name: Copy the NGINX repository definition
-  copy: src=nginx.repo dest=/etc/yum.repos.d/
+# nginx is included in RHEL 7 at version 1.12.2
+# software collections is actually behind at 1.12.1 
+# this repo simply points to CentOS - so installing
+# it on RHEL creates FrankenRHEL, so we won't
+#- name: Copy the NGINX repository definition
+#  copy: src=nginx.repo dest=/etc/yum.repos.d/
   
 - name: Copy the EPEL repository definition
   copy: src=epel.repo dest=/etc/yum.repos.d/
 
-- name: Create the GPG key for NGINX
-  copy: src=RPM-GPG-KEY-NGINX dest=/etc/pki/rpm-gpg
+# Ditto for the nginx key
+#- name: Create the GPG key for NGINX
+#  copy: src=RPM-GPG-KEY-NGINX dest=/etc/pki/rpm-gpg
 
 - name: Create the GPG key for EPEL
   copy: src=RPM-GPG-KEY-EPEL-7 dest=/etc/pki/rpm-gpg
   
-- name: Install Firewalld
-  yum: name=firewalld state=present
+- name: Install Firewalld - this is default on RHEL7
+  yum: 
+    name: firewalld 
+    state: latest
   
-- name: Start Firewalld
-  service: name=firewalld state=started enabled=yes
+- name: Start Firewalld - this is default on RHEL7
+  service: 
+    name: firewalld 
+    state: started 
+    enabled: yes
+

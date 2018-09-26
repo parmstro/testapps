@@ -1,27 +1,51 @@
 ---
 # This playbook will install MariaDB and create db user and give permissions.
+# we are installing using rh software collections just to be a 
+# smart ass. This no longer requires extra work.
+# The syspaths option deliberately installs shell wrappers
+# into the regular path. This is OK, cuz we are only running 10.2
+# and nothing else!
+# See: https://developers.redhat.com/blog/2017/10/18/use-software-collections-without-bothering-alternative-path/
 
-- name: Install MariaDB package
-  yum: name={{ item }} state=installed
-  with_items:
-   - mariadb-server
+- name: Ensure the system level package is not installed
+  yum:
+    name: mariadb
+    state: absent
+
+- name: Install MariaDB Software Collections package
+  yum: 
+    name: "{{ item }}"
+    state: latest
+  loop:
+   - rh-mariadb102-mariadb-server
+   - rh-mariadb102-syspaths
    - MySQL-python
    - libselinux-python
    - libsemanage-python
 
 - name: Configure SELinux to start mysql on any port
-  seboolean: name=mysql_connect_any state=true persistent=yes
+  seboolean:
+    name: mysql_connect_any 
+    state: true 
+    persistent: yes
 
 - name: Create Mysql configuration file
-  template: src=my.cnf.j2 dest=/etc/my.cnf
+  template:
+    src: mariadb-server.cnf.j2 
+    dest: /etc/rh-mariadb-my.cnf.d/mariadb-server.cnf
   notify: 
   - restart mariadb
   
-- name: Create MariaDB log file
-  file: path=/var/log/mysqld.log state=touch owner=mysql group=mysql mode=0775
-  
 - name: Start MariaDB Service
-  service: name=mariadb state=started enabled=yes
+  service: 
+    name: mariadb 
+    state: started
+    enabled: yes
 
-- name: insert firewalld rule
-  firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled immediate=yes
+- name: Create firewalld rule
+  firewalld:
+    port: "{{ mysql_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: yes
+
