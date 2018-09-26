@@ -1,3 +1,7 @@
 ---
-- name: restart nginx
-  service: name=nginx state=restarted enabled=yes
+- name: Restarting nginx on notification
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
+
