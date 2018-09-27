@@ -5,7 +5,7 @@
 # version of the SCL nginx we wanted using
 # a variable.
 
-- name: Restarting nginx on notification
+- name: restart nginx
   service:
     name: rh-nginx112-nginx
     state: restarted
