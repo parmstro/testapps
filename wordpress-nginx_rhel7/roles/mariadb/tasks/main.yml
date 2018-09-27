@@ -32,7 +32,7 @@
 - name: Create Mysql configuration file
   template:
     src: mariadb-server.cnf.j2 
-    dest: /etc/rh-mariadb-my.cnf.d/mariadb-server.cnf
+    dest: /etc/rh-mariadb102-my.cnf.d/mariadb-server.cnf
   notify: 
   - restart mariadb
   
