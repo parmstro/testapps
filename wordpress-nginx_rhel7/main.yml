@@ -1,6 +1,6 @@
 ---
 - name: Install WordPress, MariaDB, Nginx, and PHP-FPM
-  hosts: foreman_hostgroup_baserhel_testcpgpc
+  hosts: all 
   remote_user: root
 
   roles:
